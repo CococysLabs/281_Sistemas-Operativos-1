@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: falco-read-test
+  labels:
+    app: falco-read-test
+spec:
+  restartPolicy: Always
+  containers:
+    - name: reader
+      image: busybox:1.36
+      command:
+        - sh
+        - -c
+        - |
+          echo "archivo de prueba para Falco" > /etc/tmp/archivo-prueba
+          while true; do
+            cat /etc/tmp/archivo-prueba >/dev/null
+            sleep 10
+          done
+      volumeMounts:
+        - name: tmp-test
+          mountPath: /etc/tmp
+  volumes:
+    - name: tmp-test
+      emptyDir: {}
